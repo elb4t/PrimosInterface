@@ -1,5 +1,7 @@
 package es.elb4t.primosinterfaces
 
+import android.content.pm.ActivityInfo
+import android.content.res.Configuration
 import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -7,6 +9,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+
 
 class MainActivity : AppCompatActivity(), TaskListener {
     companion object {
@@ -56,6 +59,7 @@ class MainActivity : AppCompatActivity(), TaskListener {
     override fun onPreExecute() {
         resultField.setText("")
         primecheckbutton.text = "CANCELAR"
+        lockScreenOrientation()
     }
 
     override fun onProgressUpdate(progreso: Double?) {
@@ -65,11 +69,25 @@ class MainActivity : AppCompatActivity(), TaskListener {
     override fun onPostExecute(resultado: Boolean) {
         resultField.setText(resultado.toString() + "")
         primecheckbutton.text = "¿ES PRIMO?"
+        unlockScreenOrientation()
     }
 
     override fun onCancelled() {
         resultField.setText("Proceso cancelado")
         primecheckbutton.text = "¿ES PRIMO?"
+    }
+
+    fun lockScreenOrientation() {
+        var currentOrientation: Int = resources.configuration.orientation
+        if (currentOrientation == Configuration.ORIENTATION_PORTRAIT) {
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        } else {
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        }
+    }
+
+    fun unlockScreenOrientation() {
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
     }
 
 }
